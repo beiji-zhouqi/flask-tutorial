@@ -54,9 +54,7 @@ def login():
             error = 'Incorrect password.'
 
         if error is None:
-            print("session--", session)
             session.clear()
-            print("session--11111", session)
             session['user_id'] = user[0]
             return redirect(url_for('index'))
 
