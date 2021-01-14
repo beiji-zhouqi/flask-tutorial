@@ -49,20 +49,20 @@ def login():
             'SELECT * FROM user WHERE username = ?', (username,)
         ).fetchone()
         print("user-------", user)
-        posts = db.execute(
-            'SELECT p.id, title, body, created, author_id, username'
-            ' FROM post p JOIN user u ON p.author_id = u.id'
-            ' ORDER BY created DESC'
+        user_all = db.execute(
+            'SELECT * FROM user'
         ).fetchall()
-        print("posts------", posts)
+        print("user_all-------", user_all)
         if user is None:
             error = 'Incorrect username.'
         elif not check_password_hash(user[2], password):
             error = 'Incorrect password.'
 
         if error is None:
+            print('session-----', session)
             session.clear()
             session['user_id'] = user[0]
+            print('session-----', session)
             return redirect(url_for('index'))
 
         flash(error)
@@ -83,6 +83,7 @@ def load_logged_in_user():
 @bp.route('/logout')
 def logout():
     session.clear()
+    print("session_logout-------", session)
     return redirect(url_for('index'))
 
 
@@ -94,3 +95,7 @@ def login_required(view):
         return view(**kwargs)
 
     return wrapped_view
+
+@bp.route('/')
+def index():
+    return "auth index."
